@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 export const detectTextIntent = functions.https.onRequest((request, response) => {
       //Set CORS policy - TODO : allow access only to runway izen website.
-      response.set('Access-Control-Allow-Origin', 'http://localhost:4200');
+      response.set('Access-Control-Allow-Origin', '*');
       if (request.method === 'OPTIONS') {
         // Send response to OPTIONS requests
         response.set('Access-Control-Allow-Methods', 'POST');
@@ -54,7 +54,9 @@ export const detectTextIntent = functions.https.onRequest((request, response) =>
         //An intent was detected successfully
         const dialogflowResponse = responses[0];
         response.send({"queryText": dialogflowResponse.queryResult.queryText,
-                       "fulfillmentText": dialogflowResponse.queryResult.fulfillmentText
+                       "fulfillmentText": dialogflowResponse.queryResult.fulfillmentText,
+                       "allRequiredParamsPresent": dialogflowResponse.queryResult.allRequiredParamsPresent,
+                       "fulfillmentPayload": dialogflowResponse.queryResult.fulfillmentMessages[0].payload
                   });
       }).catch(err => {
         //err object example -> "Error: 3 INVALID_ARGUMENT: Input text not set"
